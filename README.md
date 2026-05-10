@@ -54,7 +54,7 @@ Designed for properties that want to reduce manual overhead without replacing th
 | Layer | Technology |
 |---|---|
 | Orchestration | Python · FastAPI · Celery |
-| AI | Claude 3.5 / GPT-4o · LangChain tool use |
+| AI | Claude Opus 4.7 / GPT-5.5 / Grok 4.3 · LangChain tool use |
 | Storage | PostgreSQL · Redis |
 | Infra | Docker · Traefik · Linux VPS |
 | Integrations | REST · Webhook adapters · SMTP |
