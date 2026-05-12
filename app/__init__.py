@@ -1,0 +1,1 @@
+"""HAES — Hotel Automation Engine"""
