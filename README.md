@@ -283,5 +283,5 @@ python scripts/verify.py
 ---
 
 <div align="center">
-<sub>built by <a href="https://github.com/AnaVuko1">@AnaVuko1</a></sub>
+<sub>MIT &mdash; hotel-automation-engine v1.0</sub>
 </div>
