@@ -8,3 +8,10 @@ dist/
 *.egg-info/
 .venv/
 venv/
+.activity
+*.log
+.DS_Store
+Thumbs.db
+.secrets/
+*.pem
+*.key
