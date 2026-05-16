@@ -1,6 +1,7 @@
 """Hotel Automation Engine — Multi-agent AI system for end-to-end hotel operations"""
 import logging
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -40,6 +41,22 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ─── Static Files & Dashboard ────────────────────────────────────────────────
+
+STATIC_DIR = Path(__file__).parent / "static"
+if STATIC_DIR.is_dir():
+    app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+
+
+@app.get("/dashboard", response_class=HTMLResponse, tags=["Dashboard"])
+async def dashboard():
+    """Serve the real-time operations dashboard."""
+    dashboard_file = STATIC_DIR / "dashboard.html"
+    if dashboard_file.exists():
+        return dashboard_file.read_text(encoding="utf-8")
+    return HTMLResponse("<h1>Dashboard not found</h1>", status_code=404)
+
 
 # ─── Mount Routes ────────────────────────────────────────────────────────────
 

@@ -10,17 +10,20 @@
 ![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-0d1117?style=flat-square&logo=python&logoColor=6EE7B7)
 ![License](https://img.shields.io/badge/License-MIT-0d1117?style=flat-square)
 
-**Production-ready · API-first · 5 specialized AI agents · 12-month demo data**
+**Production-ready · API-first · 5 specialized AI agents · Real-time dashboard · 12-month demo data**
 
 </div>
 
 ---
 
-## 📋 Overview
+## ✨ Features
 
-Hotel Automation Engine is a **production-grade multi-agent system** that orchestrates AI agents across hotel operations — from guest communication and check-in flows to housekeeping scheduling, maintenance ticketing, dynamic pricing, and real-time staff coordination.
-
-Designed for independent hotels and boutique properties that want to reduce manual overhead **without replacing their existing PMS**.
+- 🧠 **5 AI Agents** — Orchestrator, Guest, Ops, HSK, Revenue — each with autonomous decision logic
+- 📊 **Real-time Dashboard** — KPIs, revenue trends, agent status, activity feed at `/dashboard`
+- 💰 **Dynamic Pricing Engine** — 4-factor multiplier model (occupancy × season × urgency × events)
+- 🔌 **Webhook Layer** — Plug into any PMS via booking-created/cancelled webhooks
+- 🔍 **AI Agent Discovery** — Schema.org JSON-LD + `/.well-known/ai-agent.json` for autonomous AI agents
+- 🐳 **One-command Deploy** — Docker Compose with 12 months of realistic demo data
 
 ### What It Does
 
@@ -45,7 +48,7 @@ docker compose build
 docker compose up
 ```
 
-Open: **http://localhost:8000** · API docs: **http://localhost:8000/docs**
+Open: **http://localhost:8000/dashboard** · API docs: **http://localhost:8000/docs**
 
 ### Manual
 
@@ -58,24 +61,56 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 ---
 
+## 📊 Dashboard
+
+The built-in operations dashboard provides real-time visibility into all hotel automation activity.
+
+**Access:** `http://localhost:8000/dashboard`
+
+| Widget | Description |
+|--------|-------------|
+| **KPI Cards** | Occupancy rate, ADR, RevPAR, total revenue, direct booking rate, AI readiness score |
+| **Today's Operations** | Check-ins, check-outs, pending housekeeping tasks |
+| **Revenue Chart** | 12-month revenue trend with monthly breakdown |
+| **Agent Status** | Live status of all 5 agents with action counts and response times |
+| **Activity Feed** | Last 20 agent actions with confidence scores and execution times |
+
+The dashboard auto-refreshes every 30 seconds. No additional dependencies required — pure vanilla HTML/CSS/JS.
+
+---
+
 ## 🧠 Agent Architecture
 
-```
-                    ┌──────────────────────────────────┐
-                    │       ORCHESTRATOR AGENT         │
-                    │   routes · delegates · logs      │
-                    └──────┬──────────┬───────────────┘
-                           │          │
-            ┌──────────────┤          ├──────────────┐
-            │              │          │              │
-       ┌────▼───┐    ┌────▼───┐ ┌────▼───┐    ┌────▼──────┐
-       │ GUEST  │    │  OPS   │ │  HSK   │    │  REVENUE  │
-       │ AGENT  │    │ AGENT  │ │ AGENT  │    │  AGENT    │
-       └────┬───┘    └────┬───┘ └────┬───┘    └────┬──────┘
-            │              │          │              │
-       ┌────▼──────────────▼──────────▼──────────────▼──────┐
-       │         PMS · Schema.org · Webhook Adapters        │
-       └────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph "Request Layer"
+        API[FastAPI REST API]
+        WH[Webhook Endpoints]
+        AID[AI Agent Discovery]
+    end
+
+    subgraph "Orchestration"
+        ORC[🎯 Orchestrator Agent]
+    end
+
+    subgraph "Specialized Agents"
+        G[👤 Guest Agent]
+        O[🔧 Ops Agent]
+        H[🧹 HSK Agent]
+        R[💰 Revenue Agent]
+    end
+
+    subgraph "Data Layer"
+        DB[(SQLite / PostgreSQL)]
+        LOG[(Agent Logs)]
+    end
+
+    API --> ORC
+    WH --> ORC
+    AID --> ORC
+    ORC --> G & O & H & R
+    G & O & H & R --> DB
+    G & O & H & R --> LOG
 ```
 
 ### How Agents Work
